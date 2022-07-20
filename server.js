@@ -41,10 +41,14 @@ const onListening = () => {
     debug("Listening on " + bind);
 };
 
-const port = normalizePort(process.env.port || "3000");
-app.set("port", port);
-console.log(port);
+//const port = normalizePort(process.env.port || "3000");
+app.set("port", (process.env.port || "3000"));
+app.listen(app.get('port'), function () {
+    console.log('Node server is running on port ' + app.get('port'));
+})
+
+/* //console.log(port);
 const server = http.createServer(app);
 server.on("error", onError);
 server.on("listening", onListening);
-server.listen(port);
+server.listen(port); */
