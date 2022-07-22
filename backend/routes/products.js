@@ -154,27 +154,34 @@ router.get('/:id', (req, res, next) => {
             _id: 1,
             title: "title",
             category: 1,
+            brand: 'ganesh',
             rating: 3.5,
             ratingUsers: 322,
             mrp: 500,
             price: 400,
-            discount: 20,
+            discount: 10,
             size: "20*20",
             color: "green",
-            img: ["assets/img1.jpg","assets/img2.jpg","assets/img3.jpg"]
+            material: "plastic",
+            img: ["assets/img1.jpg", "assets/img2.jpg", "assets/img3.jpg"],
+            description: [
+                "iweurf weiruvb eruv",
+                "iweurf weiruvb eruv"
+            ]
         },
         {
             _id: 2,
             title: "title",
             category: 1,
-            rating: 3.5,
+            brand: 'suchika',
+            rating: 4.5,
             ratingUsers: 322,
             mrp: 500,
             price: 400,
             discount: 20,
             size: "20*20",
             color: "green",
-            img: "assets/img2.jpg"
+            img: ["assets/img2.jpg", "assets/img1.jpg"]
         },
         {
             _id: 3,
@@ -187,7 +194,7 @@ router.get('/:id', (req, res, next) => {
             discount: 20,
             size: "20*20",
             color: "green",
-            img: "assets/img3.jpg"
+            img: ["assets/img3.jpg"]
         },
         {
             _id: 4,

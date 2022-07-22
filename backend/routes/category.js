@@ -39,10 +39,10 @@ router.get('/:id', (req, res, next) => {
             img: "assets/img1.jpg"
         },
         {
-            _id: 1,
+            _id: 2,
             title: "title",
             category: 1,
-            rating: 3.5,
+            rating: 4.5,
             ratingUsers: 322,
             mrp: 500,
             price: 400,
@@ -52,7 +52,7 @@ router.get('/:id', (req, res, next) => {
             img: "assets/img2.jpg"
         },
         {
-            _id: 1,
+            _id: 3,
             title: "title",
             category: 2,
             rating: 3.5,
@@ -65,7 +65,7 @@ router.get('/:id', (req, res, next) => {
             img: "assets/img3.jpg"
         },
         {
-            _id: 1,
+            _id: 4,
             title: "title",
             category: 2,
             rating: 3.5,
@@ -78,7 +78,7 @@ router.get('/:id', (req, res, next) => {
             img: "assets/img4.jpg"
         },
         {
-            _id: 1,
+            _id: 5,
             title: "title",
             category: 3,
             rating: 3.5,
