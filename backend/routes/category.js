@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
+    console.log(process.env.PORT);
     var categories = [
         { _id: 1, img: "assets/img1.jpg", title: "flower" },
         { _id: 2, img: "assets/img2.jpg", title: "balloon" },
@@ -49,7 +50,7 @@ router.get('/:id', (req, res, next) => {
             discount: 20,
             size: "20*20",
             color: "green",
-            img: "assets/img2.jpg"
+            img: "assets/img3.jpg"
         },
         {
             _id: 3,
@@ -97,8 +98,7 @@ router.get('/:id', (req, res, next) => {
         }
     }
     result = products.filter(checkCategory);
-    console.log(result);
-
+ 
     res.json({
         result: result
     })
