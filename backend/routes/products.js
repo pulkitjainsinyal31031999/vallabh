@@ -6,11 +6,10 @@ const multer = require("multer");
 const check_in = require("../middleware/check_in");
 const user = require("../models/user");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
+const url = require("./../url").url;
 
-let port =
-  process.env.port != undefined
-    ? process.env.port
-    : "http://192.168.29.126:3000";
+let port = process.env.port != undefined ? process.env.port : url;
 
 const MIME_TYPE_MAP = {
   "image/png": "png",
@@ -157,14 +156,12 @@ router.put(
   "/:id",
   multer({ storage: storage }).array("images"),
   (req, res, next) => {
-    let images = [];
-    let image = req.body.image.split(",");
-    image.forEach((image) => images.push(image));
+    let images;
+    let newImage = false;
     if (req.files) {
       const url = port + "/images/";
-      req.files.forEach((file) => {
-        images.push(url + file.filename);
-      });
+      images = url + req.files[0].filename;
+      newImage = true;
     }
     let product = new Products({
       _id: req.params.id,
@@ -176,32 +173,48 @@ router.put(
       Material: req.body.material,
       gst: req.body.gst,
       description: req.body.description,
-      images: images,
       mrp: req.body.mrp,
       discount: req.body.discount,
       addOns: req.body.addOns.split(","),
+      images: images,
     });
-    Products.updateOne({ _id: req.params.id }, product)
+    Products.findOne({ _id: req.params.id })
       .populate("category")
       .then((result) => {
-        res.status(204).json({
-          message: "update Successfully",
-          product: result,
-        });
-      })
-      .catch((error) => {
-        res.status(500).json({
-          message: "server error",
-        });
+        if (newImage && result.images.length > 0) {
+          console.log(result.images);
+          fs.unlink(
+            "backend" + result.images[0].slice(url.length),
+            (err) => {}
+          );
+          result.images = images;
+        }
+        result
+          .updateOne(product)
+          .then((res1) => {
+            res.status(204).json({
+              message: "update Successfully",
+              product: res1,
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+            res.status(500).json({
+              message: "server error",
+            });
+          });
       });
   }
 );
 
 router.delete("/:id", (req, res, next) => {
-  Products.deleteOne({ _id: req.params.id })
+  Products.findOne({ _id: req.params.id })
     .then((result) => {
-      res.status(204).json({
-        message: "product deleted Successfully!",
+      fs.unlink("backend" + result.images[0].slice(url.length), (err) => {});
+      result.delete().then(() => {
+        res.status(204).json({
+          message: "product deleted Successfully!",
+        });
       });
     })
     .catch((error) => {

@@ -24,8 +24,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/vallabhBhog")
-  .then(() => console.log("connected"))
-  .catch((error) => console.log(error));
+  .then(() => console.log("Database connected"))
+  .catch((error) => console.log("failed connection to database:", error));
 
 app.use("/images", express.static(path.join("backend/images")));
 

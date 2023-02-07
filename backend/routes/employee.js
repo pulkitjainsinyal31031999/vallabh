@@ -8,11 +8,9 @@ const employee = require("../models/employee");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
 const Orders = require("../models/orders");
+const url = require("./../url").url;
 
-let port =
-  process.env.port != undefined
-    ? process.env.port
-    : "http://192.168.29.126:3000";
+let port = process.env.port != undefined ? process.env.port : url;
 
 const MIME_TYPE_MAP = {
   "image/png": "png",
@@ -201,7 +199,6 @@ router.put("/delivered", check_deliver, (req, res, next) => {
             user.userId.purchase.push(order);
           }
         });
-        console.log(user.userId);
         user.userId.save();
         res.status(200).json({ message: "h" });
       });
@@ -239,7 +236,7 @@ router.put(
       .updateOne({ _id: req.params.id }, Employee)
       .then((result) => {
         if (img == "new") {
-          fs.unlink("backend/images/" + req.body.image.slice(34), (err) => {
+          fs.unlink("backend" + req.body.image.slice(url.length), (err) => {
             console.log("err: " + err);
           });
         }

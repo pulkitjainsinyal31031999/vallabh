@@ -12,14 +12,14 @@ const jwt = require("jsonwebtoken");
 var token =
   "fLWrY2P_QZin1_b8Ofoe7A:APA91bHWk1UH5OwiX2nbJlPkMZ1ThTSA-3ExUpjlunb4hDKkQl-kCkjlyCqJ81wOjFy_Gwc288sSxbqWMKI_LgCmvMAPILT4EViFDg-TA2EZZB1PUblaUVP1a5KQquYlhkf9n_FSFQ8V";
 var users = [];
-const serviceAccount = require("../../shagun-ae5f1-firebase-adminsdk-mgxva-d2af4d6369.json");
+//const serviceAccount = require("../../shagun-ae5f1-firebase-adminsdk-mgxva-d2af4d6369.json");
 var admin = require("firebase-admin");
 const user = require("../models/user");
-
+/* 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
-
+ */
 router.post("/notification", (req, res, next) => {
   token = req.body.data;
   res.status(200).json({
@@ -71,7 +71,7 @@ router.get("/orders", check_in, (req, res, next) => {
         },
         {
           path: "orders.addOns",
-          select: "title",
+          select: ["title"],
         },
       ],
     })
@@ -201,6 +201,7 @@ router.get("/orders/order", check_out, (req, res, next) => {
     .sort("-time")
     .populate({ path: "userId", select: ["phoneNo", "address"] })
     .populate({ path: "orders.product", select: ["images", "title", "price"] })
+    .populate({ path: "orders.addOns", select: ["title"] })
     .then((result) => {
       res.status(200).json({
         result,
