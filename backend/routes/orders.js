@@ -15,6 +15,7 @@ var users = [];
 //const serviceAccount = require("../../shagun-ae5f1-firebase-adminsdk-mgxva-d2af4d6369.json");
 var admin = require("firebase-admin");
 const user = require("../models/user");
+const { Socket } = require("socket.io");
 /* 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),

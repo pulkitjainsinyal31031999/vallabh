@@ -18,6 +18,7 @@ const employee = require("./routes/employee");
 
 const bodyParser = require("body-parser");
 const features = require("./routes/feature");
+const availOrder = require("./routes/availOrder");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -49,6 +50,7 @@ app.use("/api", user);
 app.use("/api/", purchase);
 app.use("/api/", orders);
 app.use("/api/employee", employee);
+app.use("/api/avail/", availOrder);
 //app.use('/api/notification/', notification);
 
 module.exports = app;

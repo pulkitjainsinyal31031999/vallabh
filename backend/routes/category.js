@@ -70,7 +70,6 @@ router.post(
   checkout,
   multer({ storage: storage }).array("images"),
   (req, res, next) => {
-    console.log(req.body);
     const category = new Category({
       title: req.body.title,
       available: req.body.available,

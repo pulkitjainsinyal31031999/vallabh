@@ -48,7 +48,6 @@ router.get("/offerSlide", (req, res, next) => {
 });
 
 router.get("/offerSlide/:id", (req, res, next) => {
-  console.log("hi");
   Offer.findById(req.params.id)
 
     .then((result) => {
@@ -62,7 +61,6 @@ router.get("/offerSlide/:id", (req, res, next) => {
       });
     })
     .catch((error) => {
-      console.log(error);
       res.status(500).json({
         message: "server error",
       });
@@ -115,12 +113,7 @@ router.put(
     Offer.find({ _id: req.params.id })
       .then((result) => {
         if (newImage) {
-          fs.unlink("backend" + result[0].image.slice(url.length), (err) => {
-            if (err) {
-              console.log(err);
-            } else {
-            }
-          });
+          fs.unlink("backend" + result[0].image.slice(url.length), (err) => {});
         }
         result[0].image = images;
         result[0].location = req.body.location;
@@ -136,7 +129,6 @@ router.put(
         });
       })
       .catch((err) => {
-        console.log(err);
         res.status(500).json({
           message: "server error",
         });
@@ -146,7 +138,6 @@ router.put(
 
 router.delete("/offerSlide/:id", (req, res, next) => {
   Offer.find({ _id: req.params.id }).then((result) => {
-    console.log(result);
     fs.unlink("backend" + result[0].image.slice(url.length), (err) => {
       if (err) {
         //          console.log("error");
@@ -162,7 +153,6 @@ router.delete("/offerSlide/:id", (req, res, next) => {
         });
       })
       .catch((error) => {
-        console.log(error);
         res.status(500).json({
           message: "error",
         });
