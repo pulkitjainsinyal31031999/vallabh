@@ -2,10 +2,9 @@ const express = require("express");
 const router = express.Router();
 const check_out = require("../middleware/check_out");
 
-let online = false;
+let online = true;
 
 router.get("/", (req, res, next) => {
-  console.log("getOnline");
   res.status(200).json(online);
 });
 
@@ -17,4 +16,4 @@ router.post("/", check_out, (req, res, next) => {
   });
 });
 
-module.exports = router;
+module.exports = { router, online };

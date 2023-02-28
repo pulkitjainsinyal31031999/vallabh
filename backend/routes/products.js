@@ -137,18 +137,21 @@ router.get("/recentlyViewed", check_in, (req, res, next) => {
 });
 
 router.get("/:id", (req, res, next) => {
+  console.log(req.params.id);
   Products.findById(req.params.id)
     .populate("category")
     .populate("addOns")
     .then((result) => {
+      console.log(result);
       if (result === null) {
         res.status(200).json({
           message: "not found",
         });
+      } else {
+        res.status(200).json({
+          product: result,
+        });
       }
-      res.status(200).json({
-        product: result,
-      });
     });
 });
 

@@ -16,6 +16,7 @@ var users = [];
 var admin = require("firebase-admin");
 const user = require("../models/user");
 const { Socket } = require("socket.io");
+const availableOrder = require("./availOrder");
 /* 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -78,7 +79,7 @@ router.get("/orders", check_in, (req, res, next) => {
     })
     .then((result) => {
       if (result == null) {
-        throw (err.message = "not authenticate");
+        throw (err = { message: "not authenticate" });
       }
       let orders = result.orders;
       res.status(200).json({
@@ -100,6 +101,11 @@ router.get("/orders", check_in, (req, res, next) => {
 });
 
 router.post("/orders", check_in, (req, res, next) => {
+  if (!availableOrder.online) {
+    return res.status(401).json({
+      message: "Store is currently offline",
+    });
+  }
   let orders = new Orders([]);
   if (req.body.data.length == undefined) {
     let addOns = [];

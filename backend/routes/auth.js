@@ -4,81 +4,8 @@ const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { response } = require("express");
-
-router.post("/", (req, res, next) => {
-  User.findOne({ phoneNo: req.body.phone }).then((result) => {
-    if (result == null || result.length == 0) {
-      let otp = Math.floor(Math.random() * 1000000);
-      let otpS = jwt.sign({ otp: otp }, "dkfnnvie", { expiresIn: "1min" });
-      let user = new User({
-        phoneNo: req.body.phone,
-        verification: "processing",
-        otp: otpS,
-      });
-      user.save().then(() => {
-        res.status(201).json({
-          message: "user created",
-          api_key: jwt.sign({ phone: req.body.phone }, "verification", {
-            expiresIn: "1hr",
-          }),
-        });
-      });
-    } else {
-      let otp = 800000 + Math.floor(Math.random() * 100000);
-      console.log(otp);
-      let otpS = jwt.sign({ otp: otp }, "dkfnnvie", { expiresIn: "1min" });
-      result.otp = otpS;
-      result.save().then(() => {
-        res.status(201).json({
-          message: "user created",
-          api_key: jwt.sign({ phone: req.body.phone }, "verification", {
-            expiresIn: "1hr",
-          }),
-        });
-      });
-    }
-  });
-});
-
-router.post("/login", (req, res, next) => {
-  jwt.verify(req.body.api_key, "verification", (err, decode) => {
-    if (err != null) {
-      res.status(401).json({
-        message: "wrong event",
-      });
-    } else {
-      User.findOne({ phoneNo: decode.phone })
-        .then((result) => {
-          if (result.length == 0) {
-            res.status(401).json({
-              message: "wrong event",
-            });
-          } else {
-            if (jwt.decode(result.otp).otp == req.body.otp) {
-              let api_key = jwt.sign({ id: result._id }, "fkjnveefve");
-              res.status(200).json({
-                api_key: api_key,
-                verification: result.verification,
-              });
-            } else {
-              throw (err = "Incorrect otp");
-            }
-          }
-        })
-        .catch((err) => {
-          if (err == "Incorrect otp") {
-            res.status(401).json({
-              message: err.message,
-            });
-          } else {
-            res.status(501).json({
-              message: "server error",
-            });
-          }
-        });
-    }
-  });
-});
+const decode = require("../middleware/decode");
+const check_in = require("../middleware/check_in");
 
 router.post("/registration", (req, res, next) => {
   let id = jwt.decode(req.headers.api_key, "fkjnveefve").id;
@@ -96,11 +23,35 @@ router.post("/registration", (req, res, next) => {
   });
 });
 
-router.get("/detail", (req, res, next) => {
+router.post("/signIn", decode, (req, res, next) => {
+  User.findOne({ phoneNo: req.body.phone }).then((result) => {
+    if (result == null || result.length == 0) {
+      let use1 = new User({
+        phoneNo: req.body.phone,
+      });
+      use1.save().then((result) => {
+        res.status(201).json({
+          message: "user created",
+          api_key: jwt.sign({ id: result._id }, "fkjnveefve"),
+          verification: "processing",
+        });
+      });
+    } else {
+      result.save().then((result) => {
+        res.status(201).json({
+          message: "user created",
+          api_key: jwt.sign({ id: result._id }, "fkjnveefve"),
+          verification: result.verification,
+        });
+      });
+    }
+  });
+});
+
+router.get("/detail", check_in, (req, res, next) => {
   let id = jwt.decode(req.headers.api_key, "fkjnveefve").id;
   User.findById(id)
     .then((result) => {
-      console.log(result);
       res.status(200).json({
         firstName: result.firstName,
         lastName: result.lastName,
@@ -140,6 +91,28 @@ router.post("/admin", (req, res, next) => {
       message: "Auth Failed! Please recheck email and password",
     });
   }
+});
+
+router.put("/updateDetail", check_in, (req, res, next) => {
+  let id = jwt.decode(req.headers.api_key, "fkjnveefve").id;
+  let user = new User({
+    _id: id,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+  });
+  user.geoPosition = [];
+  user.geoPosition.push({ position: req.body.address });
+  User.updateOne({ _id: id }, user)
+    .then((result) => {
+      res.status(204).json({
+        message: "success",
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: err.message,
+      });
+    });
 });
 
 module.exports = router;

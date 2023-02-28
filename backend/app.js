@@ -50,7 +50,7 @@ app.use("/api", user);
 app.use("/api/", purchase);
 app.use("/api/", orders);
 app.use("/api/employee", employee);
-app.use("/api/avail/", availOrder);
+app.use("/api/avail/", availOrder.router);
 //app.use('/api/notification/', notification);
 
 module.exports = app;

@@ -1,3 +1,5 @@
 node_modules
 
 backend/images
+backend/middleware/authenticate.json
+shagun-ae5f1-firebase-adminsdk-mgxva-d2af4d6369.json

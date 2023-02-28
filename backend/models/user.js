@@ -6,7 +6,6 @@ const userSchema = mongoose.Schema({
   lastName: String,
   phoneNo: { type: Number, unique: true },
   verification: String,
-  otp: String,
   cart: [
     {
       id: {

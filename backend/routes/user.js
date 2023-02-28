@@ -51,7 +51,6 @@ router.post("/cart", check_in, (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
       if (err.code == 401) {
         res.status(401).json({
           message: "You are not Authorize!",
@@ -96,7 +95,6 @@ router.put("/cart/:id", check_in, (req, res, next) => {
         err = { message: "Something went wrong" };
         throw err;
       } else {
-        console.log(req.body.cart);
         result.cart.forEach((cart) => {
           if (cart._id == req.body.cart._id) {
             cart.addOns = req.body.cart.addOns;
